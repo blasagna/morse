@@ -27,7 +27,7 @@ class KeyboardSequenceReceiver(SequenceReceiverInterface):
         self._listener.wait()
         super().__init__(timeout_sec)
 
-    def _on_press(self, key):
+    def _on_press(self, key) -> None:
         self._input_time = time.time()
         self._seq.append(key.char)
 
@@ -44,9 +44,31 @@ class KeyboardSequenceReceiver(SequenceReceiverInterface):
 
 
 class MouseSequenceReceiver(SequenceReceiverInterface):
-    def __init__(self, timeout_sec: int):
-        super().__init__(timeout_sec)
+    LEFT = 'left'
+    RIGHT = 'right'
 
-    def receive(self) -> str:
-        # TODO: read from mouse using pyinput
-        pass
+    def __init__(self, timeout_sec: int):
+        self._seq: List[str] = []
+        self._input_time: float = None
+        self._listener = mouse.Listener(on_click=self._on_click, suppress=True)
+        self._listener.start()
+        self._listener.wait()
+        super().__init__(timeout_sec)
+    
+    def _on_click(self, x, y, button, pressed) -> None:
+        self._input_time = time.time()
+        if pressed and button == mouse.Button.left:
+            self._seq.append(MouseSequenceReceiver.LEFT)
+        elif pressed and button == mouse.Button.right:
+            self._seq.append(MouseSequenceReceiver.RIGHT)
+
+    def receive(self) -> Sequence[str]:
+        while True:
+            if self._input_time is not None:
+                elapsed = time.time() - self._input_time
+                if elapsed > self._timeout_sec:
+                    break
+        seq = self._seq[:]
+        self._seq.clear()
+        self._input_time = None
+        return seq

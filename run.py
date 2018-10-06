@@ -32,12 +32,8 @@ def main(receiver: SequenceReceiverInterface, sender: EventSenderInterface, dot:
     
     while True:
         seq = receiver.receive()
-        seq_morse = []
-        for s in seq:
-            if s == dot:
-                seq_morse.append(MorseEvent.DOT)
-            elif s == dash:
-                seq_morse.append(MorseEvent.DASH)
+        # convert input sequence to dots and dashes
+        seq_morse = [MorseEvent.DOT if s == dot else MorseEvent.DASH if s == dash else s for s in seq]
         char = decoder.decode(seq_morse)
         sender.send(char)
 
@@ -58,8 +54,8 @@ def typeit(dot, dash):
 
 
 @click.command()
-@click.option('--dot', default='left', help='dot input')
-@click.option('--dash', default='right', help='dash input')
+@click.option('--dot', default='left', help='dot input, "left" or "right"')
+@click.option('--dash', default='right', help='dash input, "left" or "right"')
 def clickit(dot, dash):
     timeout_char_sec = 0.300
     mouse_receiver = MouseSequenceReceiver(timeout_char_sec)
