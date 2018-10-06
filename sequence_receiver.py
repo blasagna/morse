@@ -22,7 +22,7 @@ class KeyboardSequenceReceiver(SequenceReceiverInterface):
     def __init__(self, timeout_sec: int):
         self._seq: List[str] = []
         self._input_time: float = None
-        self._listener = keyboard.Listener(on_press=self._on_press)
+        self._listener = keyboard.Listener(on_press=self._on_press, suppress=True)
         self._listener.start()
         self._listener.wait()
         super().__init__(timeout_sec)

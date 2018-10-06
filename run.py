@@ -23,15 +23,13 @@ class StdoutEventSender(EventSenderInterface):
         super().__init__()
     
     def send(self, data: str):
-        # TODO: implement print to stdout
-        pass
+        print(data, sep='', end='', flush=True)
 
 
-def main(receiver: SequenceReceiverInterface, dot: str, dash: str):
+def main(receiver: SequenceReceiverInterface, sender: EventSenderInterface, dot: str, dash: str):
     print('Morse code decoder')
     decoder = MorseDecoder()
     
-    # TODO: loop: receive, on timeout - decode, send to output
     while True:
         seq = receiver.receive()
         seq_morse = []
@@ -40,8 +38,8 @@ def main(receiver: SequenceReceiverInterface, dot: str, dash: str):
                 seq_morse.append(MorseEvent.DOT)
             elif s == dash:
                 seq_morse.append(MorseEvent.DASH)
-        output = decoder.decode(seq_morse)
-        print(output)
+        char = decoder.decode(seq_morse)
+        sender.send(char)
 
 
 @click.group()
@@ -55,7 +53,8 @@ def cli():
 def typeit(dot, dash):
     timeout_char_sec = 0.300
     keyboard_receiver = KeyboardSequenceReceiver(timeout_char_sec)
-    main(keyboard_receiver, dot, dash)
+    stdout_sender = StdoutEventSender()
+    main(keyboard_receiver, stdout_sender, dot, dash)
 
 
 @click.command()
@@ -64,7 +63,8 @@ def typeit(dot, dash):
 def clickit(dot, dash):
     timeout_char_sec = 0.300
     mouse_receiver = MouseSequenceReceiver(timeout_char_sec)
-    main(mouse_receiver, dot, dash)
+    stdout_sender = StdoutEventSender()
+    main(mouse_receiver, stdout_sender, dot, dash)
 
 
 if __name__ == '__main__':
