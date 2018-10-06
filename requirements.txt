@@ -1,0 +1,4 @@
+pynput==1.4
+click==7.0
+
+-e morse
