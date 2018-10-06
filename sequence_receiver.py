@@ -1,30 +1,9 @@
-#!/usr/bin/env python3
-
 import time
 
-from enum import Enum
 from typing import Sequence, List
 
 from pynput import mouse
 from pynput import keyboard
-
-class MorseEvent(Enum):
-    DOT = 1
-    DASH = 2
-
-class MorseSequence:
-    def __init__(self, seq: Sequence[MorseEvent], output: str):
-        self._output = output
-        self._seq = seq
-    
-    @property
-    def output(self):
-        return self._output
-    
-    @property
-    def seq(self):
-        return self._seq
-
 
 class SequenceReceiverInterface:
     def __init__(self, timeout_sec: int):
