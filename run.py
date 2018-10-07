@@ -7,8 +7,10 @@ from typing import Sequence, List
 
 import click
 
-from sequence_receiver import (SequenceReceiverInterface, MouseSequenceReceiver, KeyboardSequenceReceiver)
-from morse_decoder import MorseDecoder, MorseEvent
+from sequence_receiver import (SequenceReceiverInterface,
+                               MouseSequenceReceiver, KeyboardSequenceReceiver)
+from morse_decoder import (MorseDecoder, MorseEvent, Dot, Dash)
+
 
 class EventSenderInterface:
     def __init__(self):
@@ -21,19 +23,23 @@ class EventSenderInterface:
 class StdoutEventSender(EventSenderInterface):
     def __init__(self):
         super().__init__()
-    
+
     def send(self, data: str):
         print(data, sep='', end='', flush=True)
 
 
-def main(receiver: SequenceReceiverInterface, sender: EventSenderInterface, dot: str, dash: str):
+def main(receiver: SequenceReceiverInterface, sender: EventSenderInterface,
+         dot: str, dash: str):
     print('Morse code decoder')
     decoder = MorseDecoder()
-    
+
     while True:
         seq = receiver.receive()
         # convert input sequence to dots and dashes
-        seq_morse = [MorseEvent.DOT if s == dot else MorseEvent.DASH if s == dash else s for s in seq]
+        seq_morse = [
+            Dot if s == dot else Dash if s == dash else MorseEvent.INVALID
+            for s in seq
+        ]
         char = decoder.decode(seq_morse)
         sender.send(char)
 
