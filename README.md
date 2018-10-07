@@ -5,7 +5,7 @@ One of the difficulties in learning, using, and implementing Morse code is that 
 
 # usage
 ```
-(morse) C:\Users\bdima\workspace\morse>python run.py --help
+python run.py --help
 Usage: run.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -15,7 +15,7 @@ Commands:
   clickit
   typeit
 
-(morse) C:\Users\bdima\workspace\morse>python run.py clickit --help
+python run.py clickit --help
 Usage: run.py clickit [OPTIONS]
 
 Options:
@@ -23,7 +23,7 @@ Options:
   --dash TEXT  dash input, "left" or "right"
   --help       Show this message and exit.
 
-(morse) C:\Users\bdima\workspace\morse>python run.py typeit --help
+python run.py typeit --help
 Usage: run.py typeit [OPTIONS]
 
 Options:
