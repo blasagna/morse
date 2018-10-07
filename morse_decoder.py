@@ -28,7 +28,7 @@ class MorseSequence:
 
 class MorseDecoder:
     LEN_MAX = 5
-    OUTPUT_INVALID = '\0'
+    OUTPUT_INVALID = ''
 
     def __init__(self) -> None:
         e = MorseSequence([Dot], 'e')
@@ -87,7 +87,10 @@ class MorseDecoder:
 
     def decode(self, seq: Sequence[MorseEvent]) -> str:
         out = MorseDecoder.OUTPUT_INVALID
+
+        # truncate input to max length
         seq = seq[:MorseDecoder.LEN_MAX]
+
         for cand in self._seq_all[len(seq) - 1]:
             if cand.seq == seq:
                 out = cand.output

@@ -1,9 +1,9 @@
 # morse
 Morse code typing using separate inputs for dot and dash
 
-One of the difficulties in learning, using, and implementing Morse code is that there are several timing specifications: dot duration, dash duration, and pause durations between elements, characters, and words. Using two distinct inputs for dot and dash decreases the number of timing specifications and makes it easier to learn and use Morse code for text entry.
+One of the difficulties in learning and using Morse code is that there are several timing specifications: dot duration, dash duration, and pause durations between elements, characters, and words. Using two distinct inputs for dot and dash decreases the number of timing specifications and makes it easier to learn and use Morse code for text entry.
 
-# usage
+## usage
 ```
 python run.py --help
 Usage: run.py [OPTIONS] COMMAND [ARGS]...
@@ -32,9 +32,9 @@ Options:
   --help       Show this message and exit.
 ```
 
-# learning Morse code
+## learning Morse code
 
-There are a lot of resources out there for learning Morse code, but one good one is [Hello Morse](https://experiments.withgoogle.com/collection/morse).
+There are many resources out there for learning Morse code, but one good one is [Hello Morse](https://experiments.withgoogle.com/collection/morse).
 
 Extensions to Morse code are included for:
 * space     dot-dot-dash-dash
