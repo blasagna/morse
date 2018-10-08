@@ -1,7 +1,7 @@
 import time
 
 from abc import ABC, abstractmethod
-from typing import Sequence, List, Optional
+from typing import Sequence, List, Optional, Tuple
 
 from pynput import mouse
 from pynput import keyboard
@@ -19,15 +19,20 @@ class SequenceReceiverInterface(ABC):
     def receive(self) -> Sequence[str]:
         raise NotImplementedError
 
+    @abstractmethod
+    def start(self) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def stop(self) -> None:
+        raise NotImplementedError
+
 
 class KeyboardReceiver(SequenceReceiverInterface):
     def __init__(self, timeout_sec: int) -> None:
         self._seq: List[str] = []
         self._input_time: Optional[float] = None
-        self._listener = keyboard.Listener(
-            on_press=self._on_press, suppress=True)
-        self._listener.start()
-        self._listener.wait()
+        self._listener: Optional[keyboard.Listener] = None
         super().__init__(timeout_sec)
 
     def _on_press(self, key) -> None:
@@ -45,17 +50,27 @@ class KeyboardReceiver(SequenceReceiverInterface):
         self._input_time = None
         return seq
 
+    def start(self) -> None:
+        if not self._listener:
+            self._listener = keyboard.Listener(
+                on_press=self._on_press, suppress=True)
+            self._listener.start()
+            self._listener.wait()
+
+    def stop(self) -> None:
+        if self._listener:
+            self._listener.stop()
+            self._listener = None
+
 
 class MouseReceiver(SequenceReceiverInterface):
-    LEFT = 'left'
-    RIGHT = 'right'
+    LEFT = 'l'
+    RIGHT = 'r'
 
     def __init__(self, timeout_sec: int) -> None:
         self._seq: List[str] = []
         self._input_time: Optional[float] = None
-        self._listener = mouse.Listener(on_click=self._on_click, suppress=True)
-        self._listener.start()
-        self._listener.wait()
+        self._listener: Optional[mouse.Listener] = None
         super().__init__(timeout_sec)
 
     def _on_click(self, x, y, button, pressed) -> None:
@@ -75,3 +90,15 @@ class MouseReceiver(SequenceReceiverInterface):
         self._seq.clear()
         self._input_time = None
         return seq
+
+    def start(self) -> None:
+        if not self._listener:
+            self._listener = mouse.Listener(
+                on_click=self._on_click, suppress=True)
+            self._listener.start()
+            self._listener.wait()
+
+    def stop(self) -> None:
+        if self._listener:
+            self._listener.stop()
+            self._listener = None

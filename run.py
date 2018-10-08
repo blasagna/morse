@@ -2,9 +2,10 @@
 
 # TODO: add docstrings for files, modules, classes
 import time
+import sys
 
 from enum import Enum
-from typing import Sequence, List
+from typing import Sequence, List, Optional
 
 import click
 
@@ -16,49 +17,92 @@ from event_sender import (EventSenderInterface, StdoutSender, KeyboardSender)
 
 def main(receiver: SequenceReceiverInterface, sender: EventSenderInterface,
          dot: str, dash: str):
-    print('Morse code decoder')
+    print('Morse code decoder.')
+    print('Enter an invalid input to exit:')
+    print('  keyboard: any key other than dot/dash')
+    print('  mouse: ctrl-c')
     decoder = MorseDecoder()
 
-    while True:
+    running: bool = True
+    while running:
+        receiver.start()
         seq = receiver.receive()
+        receiver.stop()
+
         # convert input sequence to dots and dashes
         seq_morse = [
             Dot if s == dot else Dash if s == dash else MorseEvent.INVALID
             for s in seq
         ]
-        char = decoder.decode(seq_morse)
-        sender.send(char)
-
-
-@click.group()
-def cli():
-    pass
-
-
-@click.command()
-@click.option('--dot', default='j', help='dot input')
-@click.option('--dash', default='k', help='dash input')
-def typeit(dot, dash):
-    # TODO: make timeout a runtime arg
-    # TODO: validate args. dot/dash should be len 1
-    timeout_char_sec = 0.300
-    receiver = KeyboardReceiver(timeout_char_sec)
-    sender = StdoutSender()
-    main(receiver, sender, dot, dash)
+        if MorseEvent.INVALID in seq_morse:
+            running = False
+        else:
+            char = decoder.decode(seq_morse)
+            sender.send(char)
+    print('Goodbye.')
 
 
 @click.command()
-@click.option('--dot', default='left', help='dot input, "left" or "right"')
-@click.option('--dash', default='right', help='dash input, "left" or "right"')
-def clickit(dot, dash):
-    # TODO: validate args. dot/dash should be "left" or "right"
-    timeout_char_sec = 0.300
-    receiver = MouseReceiver(timeout_char_sec)
-    sender = KeyboardSender()
+@click.option(
+    '--dot',
+    default='j',
+    help='dot input (use l or r for mouse buttons)',
+    show_default=True)
+@click.option(
+    '--dash',
+    default='k',
+    help='dash input (use l or r for mouse buttons)',
+    show_default=True)
+@click.option(
+    '--enter',
+    type=click.Choice(['keyboard', 'mouse']),
+    default='keyboard',
+    help='input method',
+    show_default=True)
+@click.option(
+    '--output',
+    type=click.Choice(['keyboard', 'stdout']),
+    default='keyboard',
+    help='output method',
+    show_default=True)
+@click.option(
+    '--timeout',
+    default=0.200,
+    help='end of character timeout (sec)',
+    show_default=True)
+def cli(dot, dash, enter, output, timeout):
+    enter: str = enter.lower()
+    output: str = output.lower()
+    dot: str = dot.lower()
+    dash: str = dash.lower()
+
+    receiver: Optional[SequenceReceiverInterface] = None
+    sender: Optional[EventSenderInterface] = None
+
+    if enter == 'keyboard':
+        assert len(dot) == 1
+        assert len(dash) == 1
+        receiver = KeyboardReceiver(timeout)
+    elif enter == 'mouse':
+        assert dot in ('l', 'r')
+        assert dash in ('l', 'r')
+        receiver = MouseReceiver(timeout)
+    else:
+        print('Invalid input method:', enter)
+        sys.exit(1)
+
+    if output == 'keyboard':
+        sender = KeyboardSender()
+    elif output == 'stdout':
+        sender = StdoutSender()
+    else:
+        print('Invalid output method:', output)
+        sys.exit(1)
+
+    assert receiver
+    assert sender
     main(receiver, sender, dot, dash)
 
 
 if __name__ == '__main__':
-    cli.add_command(typeit)
-    cli.add_command(clickit)
     cli()

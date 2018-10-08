@@ -64,9 +64,10 @@ class MorseDecoder:
         c = MorseSequence([Dash, Dot, Dash, Dot], 'c')
         y = MorseSequence([Dash, Dot, Dash, Dash], 'y')
         z = MorseSequence([Dash, Dash, Dot, Dot], 'z')
+        q = MorseSequence([Dash, Dash, Dot, Dash], 'q')
         '''unused = MorseSequence([Dash, Dash, Dash, Dot], '')'''
         back = MorseSequence([Dash, Dash, Dash, Dash], '\b')
-        seq_len_4 = [h, v, f, space, l, p, j, b, x, c, y, z, back]
+        seq_len_4 = [h, v, f, space, l, p, j, b, x, c, y, z, q, back]
 
         digit_0 = MorseSequence([Dash, Dash, Dash, Dash, Dash], '0')
         digit_1 = MorseSequence([Dot, Dash, Dash, Dash, Dash], '1')

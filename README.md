@@ -5,31 +5,17 @@ One of the difficulties in learning and using Morse code is that there are sever
 
 ## usage
 ```
-python run.py --help
-Usage: run.py [OPTIONS] COMMAND [ARGS]...
+Usage: run.py [OPTIONS]
 
 Options:
-  --help  Show this message and exit.
-
-Commands:
-  clickit
-  typeit
-
-python run.py clickit --help
-Usage: run.py clickit [OPTIONS]
-
-Options:
-  --dot TEXT   dot input, "left" or "right"
-  --dash TEXT  dash input, "left" or "right"
-  --help       Show this message and exit.
-
-python run.py typeit --help
-Usage: run.py typeit [OPTIONS]
-
-Options:
-  --dot TEXT   dot input
-  --dash TEXT  dash input
-  --help       Show this message and exit.
+  --dot TEXT                  dot input (use l or r for mouse buttons)
+                              [default: j]
+  --dash TEXT                 dash input (use l or r for mouse buttons)
+                              [default: k]
+  --enter [keyboard|mouse]    input method  [default: keyboard]
+  --output [keyboard|stdout]  output method  [default: keyboard]
+  --timeout FLOAT             end of character timeout (sec)  [default: 0.2]
+  --help                      Show this message and exit.
 ```
 
 ## learning Morse code
@@ -39,3 +25,6 @@ There are many resources out there for learning Morse code, but one good one is 
 Extensions to Morse code are included for:
 * space     dot-dot-dash-dash
 * backspace dash-dash-dash-dash
+
+# run tets
+TODO: add unit tests

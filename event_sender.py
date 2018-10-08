@@ -16,13 +16,11 @@ class StdoutSender(EventSenderInterface):
         print(data, sep='', end='', flush=True)
 
 
-# TODO: debug keyboard output with keyboard input
 class KeyboardSender(EventSenderInterface):
     def __init__(self) -> None:
         self._keyboard = Controller()
 
     def send(self, data: str) -> None:
-        print('sending', data)
         try:
             self._keyboard.type(data)
         except Controller.InvalidCharacterException:
