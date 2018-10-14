@@ -3,6 +3,14 @@ Morse code typing using separate inputs for dot and dash
 
 One of the difficulties in learning and using Morse code is that there are several timing specifications: dot duration, dash duration, and pause durations between elements, characters, and words. Using two distinct inputs for dot and dash decreases the number of timing specifications and makes it easier to learn and use Morse code for text entry.
 
+## dependencies
+This is a Python 3 project. As with most Python projects, it's recommended to work within a virtual environment. I like to use [miniconda](https://conda.io/miniconda.html) to manage Python interpreters and virtual environments.
+
+Install dependencies using [pip](https://pypi.org/project/pip/), the Python package manager.
+```
+pip install -r requirements.txt
+```
+
 ## usage
 ```
 Usage: run.py [OPTIONS]
@@ -27,4 +35,4 @@ Extensions to Morse code are included for:
 * backspace dash-dash-dash-dash
 
 # run tests
-TODO: add unit tests
+Run unit tests with `pytest .` 
