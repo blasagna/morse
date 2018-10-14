@@ -8,6 +8,15 @@ from pynput import keyboard
 
 
 class SequenceReceiverInterface(ABC):
+    """
+    Get events from an input mechanism.
+
+    Attributes
+    ----------
+    timeout_sec
+        Timeout (in seconds) after an input that signifies the end of a sequence
+    """
+
     def __init__(self, timeout_sec: int) -> None:
         self._timeout_sec = timeout_sec
 
@@ -17,25 +26,46 @@ class SequenceReceiverInterface(ABC):
 
     @abstractmethod
     def receive(self) -> Sequence[str]:
+        """
+        Receive a sequence of input events.
+
+        Blocks until timeout_sec has elapsed after an input event, at which 
+        point the sequence of events from the start (or previous timeout) is 
+        returned.
+
+        Returns
+        -------
+        Sequence of input characters
+        """
         raise NotImplementedError
 
     @abstractmethod
     def start(self) -> None:
+        """
+        Start listening for input events
+        """
         raise NotImplementedError
 
     @abstractmethod
     def stop(self) -> None:
+        """
+        Stop listening for input events
+        """
         raise NotImplementedError
 
 
 class KeyboardReceiver(SequenceReceiverInterface):
+    """
+    Get events from keyboard input.
+    """
+
     def __init__(self, timeout_sec: int) -> None:
         self._seq: List[str] = []
         self._input_time: Optional[float] = None
         self._listener: Optional[keyboard.Listener] = None
         super().__init__(timeout_sec)
 
-    def _on_press(self, key) -> None:
+    def _on_press(self, key: keyboard.Key) -> None:
         self._input_time = time.time()
         self._seq.append(key.char)
 
@@ -64,6 +94,9 @@ class KeyboardReceiver(SequenceReceiverInterface):
 
 
 class MouseReceiver(SequenceReceiverInterface):
+    """
+    Get events from left and right mouse button clicks
+    """
     LEFT = 'l'
     RIGHT = 'r'
 

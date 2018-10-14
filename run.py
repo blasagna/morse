@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
+# application to enter text using morse code
 
-# TODO: add docstrings for files, modules, classes
 import time
 import sys
 
@@ -67,7 +67,7 @@ def main(receiver: SequenceReceiverInterface, sender: EventSenderInterface,
     show_default=True)
 @click.option(
     '--timeout',
-    default=0.200,
+    default=0.300,
     help='end of character timeout (sec)',
     show_default=True)
 def cli(dot, dash, enter, output, timeout):

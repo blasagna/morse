@@ -13,6 +13,17 @@ Dash = MorseEvent.DASH
 
 
 class MorseSequence:
+    """
+    Pairs of character output and sequences of Morse code events
+
+    Attributes
+    ----------
+    output
+        Character output or escape code, such as space or backspace
+    seq
+        Sequence of Morse code events (dots, dashes) that decode to output
+    """
+
     def __init__(self, seq: Sequence[MorseEvent], output: str) -> None:
         self._output = output
         self._seq = seq
@@ -27,6 +38,10 @@ class MorseSequence:
 
 
 class MorseDecoder:
+    """
+    Decodes sequences of Morse events (dots, dashes) into character code output
+    """
+
     LEN_MAX = 5
     OUTPUT_INVALID = ''
 
@@ -87,6 +102,9 @@ class MorseDecoder:
         self._seq_all = [seq_len_1, seq_len_2, seq_len_3, seq_len_4, seq_len_5]
 
     def decode(self, seq: Sequence[MorseEvent]) -> str:
+        """
+        Decode input sequence into output character code
+        """
         out = MorseDecoder.OUTPUT_INVALID
 
         # truncate input to max length
