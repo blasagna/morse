@@ -26,5 +26,5 @@ Extensions to Morse code are included for:
 * space     dot-dot-dash-dash
 * backspace dash-dash-dash-dash
 
-# run tets
+# run tests
 TODO: add unit tests
