@@ -1,85 +1,90 @@
+// Package morse decodes Morse code
 package morse
-
-// todo next: build library to process sequences of inputs
 
 import (
 	"reflect"
 )
 
-type MorseEvent int
+// InputEvent is an input event
+type InputEvent int
 
 const (
-	Dot     MorseEvent = 0
-	Dash    MorseEvent = 1
-	Invalid MorseEvent = 2
+	// Dot input event
+	Dot InputEvent = 0
+	// Dash input event
+	Dash InputEvent = 1
+	// Invalid (not dot/dash) input event
+	Invalid InputEvent = 2
 )
 
-type MorseSequence struct {
+type morseSequence struct {
 	Output string
-	Seq    []MorseEvent
+	Seq    []InputEvent
 }
 
-var E = MorseSequence{"e", []MorseEvent{Dot}}
-var T = MorseSequence{"t", []MorseEvent{Dash}}
-var SeqLen1 = []MorseSequence{E, T}
-var I = MorseSequence{"i", []MorseEvent{Dot, Dot}}
-var A = MorseSequence{"a", []MorseEvent{Dot, Dash}}
-var N = MorseSequence{"n", []MorseEvent{Dash, Dot}}
-var M = MorseSequence{"m", []MorseEvent{Dash, Dash}}
-var SeqLen2 = []MorseSequence{I, A, N, M}
-var S = MorseSequence{"s", []MorseEvent{Dot, Dot, Dot}}
-var U = MorseSequence{"u", []MorseEvent{Dot, Dot, Dash}}
-var R = MorseSequence{"r", []MorseEvent{Dot, Dash, Dot}}
-var W = MorseSequence{"w", []MorseEvent{Dot, Dash, Dash}}
-var D = MorseSequence{"d", []MorseEvent{Dash, Dot, Dot}}
-var K = MorseSequence{"k", []MorseEvent{Dash, Dot, Dash}}
-var G = MorseSequence{"g", []MorseEvent{Dash, Dash, Dot}}
-var O = MorseSequence{"o", []MorseEvent{Dash, Dash, Dash}}
-var SeqLen3 = []MorseSequence{S, U, R, W, D, K, G, O}
-var H = MorseSequence{"h", []MorseEvent{Dot, Dot, Dot, Dot}}
-var V = MorseSequence{"v", []MorseEvent{Dot, Dot, Dot, Dash}}
-var F = MorseSequence{"f", []MorseEvent{Dot, Dot, Dash, Dot}}
-var Space = MorseSequence{" ", []MorseEvent{Dot, Dot, Dash, Dash}}
-var L = MorseSequence{"l", []MorseEvent{Dot, Dash, Dot, Dot}}
+var e = morseSequence{"e", []InputEvent{Dot}}
+var t = morseSequence{"t", []InputEvent{Dash}}
+var seqLen1 = []morseSequence{e, t}
+var i = morseSequence{"i", []InputEvent{Dot, Dot}}
+var a = morseSequence{"a", []InputEvent{Dot, Dash}}
+var n = morseSequence{"n", []InputEvent{Dash, Dot}}
+var m = morseSequence{"m", []InputEvent{Dash, Dash}}
+var seqLen2 = []morseSequence{i, a, n, m}
+var s = morseSequence{"s", []InputEvent{Dot, Dot, Dot}}
+var u = morseSequence{"u", []InputEvent{Dot, Dot, Dash}}
+var r = morseSequence{"r", []InputEvent{Dot, Dash, Dot}}
+var w = morseSequence{"w", []InputEvent{Dot, Dash, Dash}}
+var d = morseSequence{"d", []InputEvent{Dash, Dot, Dot}}
+var k = morseSequence{"k", []InputEvent{Dash, Dot, Dash}}
+var g = morseSequence{"g", []InputEvent{Dash, Dash, Dot}}
+var o = morseSequence{"o", []InputEvent{Dash, Dash, Dash}}
+var seqLen3 = []morseSequence{s, u, r, w, d, k, g, o}
+var h = morseSequence{"h", []InputEvent{Dot, Dot, Dot, Dot}}
+var v = morseSequence{"v", []InputEvent{Dot, Dot, Dot, Dash}}
+var f = morseSequence{"f", []InputEvent{Dot, Dot, Dash, Dot}}
+var space = morseSequence{" ", []InputEvent{Dot, Dot, Dash, Dash}}
+var l = morseSequence{"l", []InputEvent{Dot, Dash, Dot, Dot}}
 
-// unused MorseSequence{"", []MorseEvent{Dot, Dash, Dot, Dash}}
-var P = MorseSequence{"p", []MorseEvent{Dot, Dash, Dash, Dot}}
-var J = MorseSequence{"j", []MorseEvent{Dot, Dash, Dash, Dash}}
-var B = MorseSequence{"b", []MorseEvent{Dash, Dot, Dot, Dot}}
-var X = MorseSequence{"x", []MorseEvent{Dash, Dot, Dot, Dash}}
-var C = MorseSequence{"c", []MorseEvent{Dash, Dot, Dash, Dot}}
-var Y = MorseSequence{"y", []MorseEvent{Dash, Dot, Dash, Dash}}
-var Z = MorseSequence{"z", []MorseEvent{Dash, Dash, Dot, Dot}}
-var Q = MorseSequence{"q", []MorseEvent{Dash, Dash, Dot, Dash}}
+// unused morseSequence{"", []InputEvent{Dot, Dash, Dot, Dash}}
+var p = morseSequence{"p", []InputEvent{Dot, Dash, Dash, Dot}}
+var j = morseSequence{"j", []InputEvent{Dot, Dash, Dash, Dash}}
+var b = morseSequence{"b", []InputEvent{Dash, Dot, Dot, Dot}}
+var x = morseSequence{"x", []InputEvent{Dash, Dot, Dot, Dash}}
+var c = morseSequence{"c", []InputEvent{Dash, Dot, Dash, Dot}}
+var y = morseSequence{"y", []InputEvent{Dash, Dot, Dash, Dash}}
+var z = morseSequence{"z", []InputEvent{Dash, Dash, Dot, Dot}}
+var q = morseSequence{"q", []InputEvent{Dash, Dash, Dot, Dash}}
 
-// unused MorseSequence{"", []MorseEvent{Dash, Dash, Dash, Dot}}
-var Back = MorseSequence{"\b", []MorseEvent{Dash, Dash, Dash, Dash}}
-var SeqLen4 = []MorseSequence{H, V, F, Space, L, P, J, B, X, C, Y, Z, Q, Back}
+// unused morseSequence{"", []InputEvent{Dash, Dash, Dash, Dot}}
+var back = morseSequence{"\b", []InputEvent{Dash, Dash, Dash, Dash}}
+var seqLen4 = []morseSequence{h, v, f, space, l, p, j, b, x, c, y, z, q, back}
 
-var Zero = MorseSequence{"0", []MorseEvent{Dash, Dash, Dash, Dash, Dash}}
-var One = MorseSequence{"1", []MorseEvent{Dot, Dash, Dash, Dash, Dash}}
-var Two = MorseSequence{"2", []MorseEvent{Dot, Dot, Dash, Dash, Dash}}
-var Three = MorseSequence{"3", []MorseEvent{Dot, Dot, Dot, Dash, Dash}}
-var Four = MorseSequence{"4", []MorseEvent{Dot, Dot, Dot, Dot, Dash}}
-var Five = MorseSequence{"5", []MorseEvent{Dot, Dot, Dot, Dot, Dot}}
-var Six = MorseSequence{"6", []MorseEvent{Dash, Dot, Dot, Dot, Dot}}
-var Seven = MorseSequence{"7", []MorseEvent{Dash, Dash, Dot, Dot, Dot}}
-var Eight = MorseSequence{"8", []MorseEvent{Dash, Dash, Dash, Dot, Dot}}
-var Nine = MorseSequence{"9", []MorseEvent{Dash, Dash, Dash, Dash, Dot}}
-var SeqLen5 = []MorseSequence{Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine}
+var zero = morseSequence{"0", []InputEvent{Dash, Dash, Dash, Dash, Dash}}
+var one = morseSequence{"1", []InputEvent{Dot, Dash, Dash, Dash, Dash}}
+var two = morseSequence{"2", []InputEvent{Dot, Dot, Dash, Dash, Dash}}
+var three = morseSequence{"3", []InputEvent{Dot, Dot, Dot, Dash, Dash}}
+var four = morseSequence{"4", []InputEvent{Dot, Dot, Dot, Dot, Dash}}
+var five = morseSequence{"5", []InputEvent{Dot, Dot, Dot, Dot, Dot}}
+var six = morseSequence{"6", []InputEvent{Dash, Dot, Dot, Dot, Dot}}
+var seven = morseSequence{"7", []InputEvent{Dash, Dash, Dot, Dot, Dot}}
+var eight = morseSequence{"8", []InputEvent{Dash, Dash, Dash, Dot, Dot}}
+var nine = morseSequence{"9", []InputEvent{Dash, Dash, Dash, Dash, Dot}}
+var seqLen5 = []morseSequence{zero, one, two, three, four, five, six, seven, eight, nine}
 
-var SeqAll = [][]MorseSequence{SeqLen1, SeqLen2, SeqLen3, SeqLen4, SeqLen5}
+var seqAll = [][]morseSequence{seqLen1, seqLen2, seqLen3, seqLen4, seqLen5}
 
-const SeqLenMax = 5
-const OutputInvalid = ""
+const seqLenMax = 5
+const outputInvalid = ""
 
-func Decode(s []MorseEvent) string {
-	out := OutputInvalid
+// Decode converts valid Morse code input into an output character.
+// If the sequence is not valid an empty string is returned.
+func Decode(s []InputEvent) string {
+	out := outputInvalid
 
 	// truncate input to max length
-	s = s[:SeqLenMax]
+	s = s[:seqLenMax]
 
-	for _, candidate := range SeqAll[len(s)-1] {
+	for _, candidate := range seqAll[len(s)-1] {
 		if reflect.DeepEqual(candidate.Seq, s) {
 			out = candidate.Output
 			break
@@ -87,11 +92,3 @@ func Decode(s []MorseEvent) string {
 	}
 	return out
 }
-
-// func main() {
-// 	for _, list := range(SeqAll) {
-// 		for _, v := range(list) {
-// 			fmt.Println(v.Output, v.Seq)
-// 		}
-// 	}
-// }
