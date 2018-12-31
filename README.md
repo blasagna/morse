@@ -1,15 +1,13 @@
 # morse
-Morse code typing using separate inputs for dot and dash
-
-One of the difficulties in learning and using Morse code is that there are several timing specifications: dot duration, dash duration, and pause durations between elements, characters, and words. Using two distinct inputs for dot and dash decreases the number of timing specifications and makes it easier to learn and use Morse code for text entry.
+Morse code decoding using [golang](https://golang.org/).
 
 ## dependencies
-__TODO: write dependencies for golang__
+[Download and install](https://golang.org/dl/) golang.
 
-## usage
-__TODO: write usage for golang__
-```
-Usage: [OPTIONS]
+## install
+You can install the morse package using [`go get`](https://golang.org/cmd/go/#hdr-Download_and_install_packages_and_dependencies):
+```golang
+go get github.com/blasagna/morse
 ```
 
 ## learning Morse code
@@ -21,9 +19,4 @@ Extensions to Morse code are included for:
 * backspace dash-dash-dash-dash
 
 ## run tests
-__TODO: write tests for golang__
-
-## TODO
-* write go library which processes input sequences
-* write unit tests
-* write main which gets inputs, displays outputs
+Run `go test` from the morse/ directory to run all unit tests.
