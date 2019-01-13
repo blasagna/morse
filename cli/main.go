@@ -25,11 +25,20 @@ func main() {
 
 	termbox.SetInputMode(termbox.InputMouse)
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-	fmt.Println("hello!")
 
 	seqInput := []morse.InputEvent{}
 	lastInputTime := time.Now()
-	timeoutInput := 0.5
+	timeoutInput := 0.3
+	quitInput := 'q'
+	dotInput := 'j'
+	dashInput := 'k'
+
+	fmt.Println("We \u2661  Morse code!")
+	fmt.Println("Current config:")
+	fmt.Println("Dot:", string(dotInput))
+	fmt.Println("Dash:", string(dashInput))
+	fmt.Println("Quit:", string(quitInput))
+	fmt.Println()
 inputloop:
 	for {
 		select {
@@ -37,13 +46,11 @@ inputloop:
 			if ev.Type == termbox.EventKey {
 				if ev.Ch < 128 {
 					switch ev.Ch {
-					case 'j':
-						fmt.Println("pressed j")
+					case dotInput:
 						seqInput = append(seqInput, morse.Dot)
-					case 'k':
-						fmt.Println("pressed k")
+					case dashInput:
 						seqInput = append(seqInput, morse.Dash)
-					case 'q':
+					case quitInput:
 						fmt.Println("quitting...")
 						break inputloop
 					}
@@ -65,9 +72,8 @@ inputloop:
 				panic(ev.Err)
 			}
 		default:
-			if time.Since(lastInputTime).Seconds() > timeoutInput {
-				// TODO: decode input sequence
-				fmt.Println(seqInput, time.Since(lastInputTime))
+			if len(seqInput) > 0 && time.Since(lastInputTime).Seconds() > timeoutInput {
+				fmt.Print(morse.Decode(seqInput))
 				lastInputTime = time.Now()
 				seqInput = nil
 			}

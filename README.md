@@ -13,6 +13,8 @@ go get github.com/blasagna/morse
 ## command line runner
 There is a command line executable which uses the morse library in cli/
 
+It also depends on termbox, which you can install using `go get github.com/nsf/termbox-go`
+
 ## learning Morse code
 
 There are many resources out there for learning Morse code, but one good one is [Hello Morse](https://experiments.withgoogle.com/collection/morse).
@@ -25,8 +27,6 @@ Extensions to Morse code are included for:
 Run `go test` from the morse/ directory to run all unit tests.
 
 ## TODO
-* define end of input sequence after timeout
-* decode input sequences
 * configure input at runtime:
   * keyboard keys or mouse clicks
   * set inputs for dot and dash
