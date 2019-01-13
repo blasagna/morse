@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"time"
 
@@ -8,7 +9,24 @@ import (
 	termbox "github.com/nsf/termbox-go"
 )
 
+var dotFlag string
+var dashFlag string
+var quitFlag string
+var timeoutFlag time.Duration
+
+func init() {
+	flag.StringVar(&dotFlag, "dot", "j", "Dot input. Valid options are single character inputs.")
+	flag.StringVar(&dashFlag, "dash", "k", "Dash input. Valid options are single character inputs.")
+	flag.StringVar(&quitFlag, "quit", "q", "Quit input. Valid options are single character inputs.")
+	flag.DurationVar(&timeoutFlag, "timeout", time.Duration(300)*time.Millisecond, "Input timeout duration")
+}
+
 func main() {
+	flag.Parse()
+	timeoutInput := timeoutFlag
+	quitInput := []rune(quitFlag)[0]
+	dotInput := []rune(dotFlag)[0]
+	dashInput := []rune(dashFlag)[0]
 
 	err := termbox.Init()
 	if err != nil {
@@ -28,15 +46,12 @@ func main() {
 
 	seqInput := []morse.InputEvent{}
 	lastInputTime := time.Now()
-	timeoutInput := 0.3
-	quitInput := 'q'
-	dotInput := 'j'
-	dashInput := 'k'
 
 	fmt.Println("We \u2661  Morse code!")
 	fmt.Println("Current config:")
 	fmt.Println("Dot:", string(dotInput))
 	fmt.Println("Dash:", string(dashInput))
+	fmt.Println("Input timeout:", timeoutInput)
 	fmt.Println("Quit:", string(quitInput))
 	fmt.Println()
 inputloop:
@@ -51,28 +66,17 @@ inputloop:
 					case dashInput:
 						seqInput = append(seqInput, morse.Dash)
 					case quitInput:
-						fmt.Println("quitting...")
 						break inputloop
 					}
 					lastInputTime = time.Now()
-				}
-			}
-			// TODO: configure to use mouse buttons as input
-			if ev.Type == termbox.EventMouse {
-				switch ev.Key {
-				case termbox.MouseLeft:
-					fmt.Println("mouse left")
-					termbox.Flush()
-				case termbox.MouseRight:
-					fmt.Println("mouse right")
-					termbox.Flush()
 				}
 			}
 			if ev.Type == termbox.EventError {
 				panic(ev.Err)
 			}
 		default:
-			if len(seqInput) > 0 && time.Since(lastInputTime).Seconds() > timeoutInput {
+			if len(seqInput) > 0 && time.Since(lastInputTime) > timeoutInput {
+				// TODO use string builder?
 				fmt.Print(morse.Decode(seqInput))
 				lastInputTime = time.Now()
 				seqInput = nil
