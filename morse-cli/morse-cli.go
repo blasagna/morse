@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/blasagna/morse"
@@ -54,6 +55,8 @@ func main() {
 	fmt.Println("Input timeout:", timeoutInput)
 	fmt.Println("Quit:", string(quitInput))
 	fmt.Println()
+
+	outputBuilder := strings.Builder{}
 inputloop:
 	for {
 		select {
@@ -76,8 +79,10 @@ inputloop:
 			}
 		default:
 			if len(seqInput) > 0 && time.Since(lastInputTime) > timeoutInput {
-				// TODO use string builder?
-				fmt.Print(morse.Decode(seqInput))
+				output := morse.Decode(seqInput)
+				outputBuilder.WriteString(output)
+				fmt.Println(seqInput, output)
+				fmt.Println(outputBuilder.String())
 				lastInputTime = time.Now()
 				seqInput = nil
 			}

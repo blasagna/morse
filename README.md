@@ -11,7 +11,7 @@ go get github.com/blasagna/morse
 ```
 
 ## command line runner
-There is a command line executable which uses the morse library in cli/
+There is a command line executable which uses the morse library in morse-cli/
 
 It also depends on termbox, which you can install using `go get github.com/nsf/termbox-go`
 
@@ -25,9 +25,4 @@ Extensions to Morse code are included for:
 
 ## run tests
 Run `go test` from the morse/ directory to run all unit tests.
-
-## TODO
-* configure input at runtime:
-  * keyboard keys or mouse clicks
-  * set inputs for dot and dash
 
