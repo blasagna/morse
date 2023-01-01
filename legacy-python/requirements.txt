@@ -1,5 +1,5 @@
-pynput==1.4
+pynput
 click==7.0
-mypy==0.630
-yapf==0.24.0 
-pytest==3.8.2 
+mypy
+yapf
+pytest
